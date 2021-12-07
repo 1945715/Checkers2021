@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2722222222222222" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/drawable/ic_baseline_brightness_high_24.xml" value="0.2722222222222222" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/drawable/ic_baseline_circle_24.xml" value="0.2675925925925926" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/drawable/ic_dame_blanche.xml" value="0.2675925925925926" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/drawable/ic_dame_noir.xml" value="0.2675925925925926" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2722222222222222" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/drawable/ic_pion_blanc.xml" value="0.2722222222222222" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/drawable/ic_pion_noir.xml" value="0.2675925925925926" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/drawable/ic_pion_possible.xml" value="0.22135416666666666" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/drawable/ic_tuile_vide.xml" value="0.22135416666666666" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/layout-land/fragment_jeu.xml" value="0.67" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/layout/activity_fragment.xml" value="0.29483695652173914" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/layout/activity_main.xml" value="0.29483695652173914" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/layout/fragment_jeu.xml" value="0.5" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/layout/fragment_nom_joueur.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/Hakim/AndroidStudioProjects/Checkers2021/app/src/main/res/layout/item_historique_deplacement.xml" value="0.29483695652173914" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

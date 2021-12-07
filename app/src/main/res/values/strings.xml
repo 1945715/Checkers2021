@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Dame</string>
+    <string name="btn_commencerJeu">Commencer la partie</string>
+    <string name="input_joueurBlanc">Joueur pion blanc</string>
+    <string name="input_joueurNoir">Joueur pion noir</string>
+    <string name="valeur_test">Valeur test</string>
+    <string name="message_erreur_nom">Les noms ne peuvent pas être vides</string>
+    <string name="bouton_recommencer">RECOMMENCER</string>
+    <string name="bouton_precedant">PRÉCÉDANT</string>
+    <string name="texte_gagnant">Bravo aux </string>
+    <string name="texte_tour_joueur">C\'est le tour de: &#160;</string>
+</resources>
