@@ -588,10 +588,10 @@ public class Damier implements Cloneable{
                 if(getPion(t) != null){
                     if((m_estTourJoueurBlanc && getCouleurPionSurTuile(t) == Pion.Couleur.BLANC) || (!m_estTourJoueurBlanc && getCouleurPionSurTuile(t) == Pion.Couleur.NOIR)){
                         if(getPion(t) instanceof Dame){
-                            detecterNbDeplacementDame(getTuile(t.getX(),t.getY()), new LinkedList<Tuile>(), this, null);
+                            detecterNbDeplacementDame(getTuile(t.getX(),t.getY()), new LinkedList<>(), this, null);
                         }
                         else{
-                            detecterNbMovementPion(t, new LinkedList<Tuile>());
+                            detecterNbMovementPion(t, new LinkedList<>());
                         }
                     }
                 }
@@ -615,6 +615,9 @@ public class Damier implements Cloneable{
         if(0 == p_mouvementFait.size()){
             p_mouvementFait.add(p_tuile);
         }
+        else if(2 == p_mouvementFait.size()){
+            System.out.println("YEEE");
+        }
 
         if (p_tuile != null) {
             boolean Arrete = true;
@@ -622,11 +625,14 @@ public class Damier implements Cloneable{
                 if(!estVideTuile(p_tuile.getTuileHautGauche())){
                     if(estVideTuile(p_tuile.getTuileHautGauche().getTuileHautGauche())){
                         if(getCouleurPionSurTuile(p_tuile) != getCouleurPionSurTuile(p_tuile.getTuileHautGauche())){
-                            Arrete = false;
-                            LinkedList<Tuile> listtmp = new LinkedList<Tuile>();
-                            listtmp.addAll(p_mouvementFait);
-                            listtmp.add(p_tuile.getTuileHautGauche().getTuileHautGauche());
-                            detecterNbMovementPion(p_tuile.getTuileHautGauche().getTuileHautGauche(), listtmp);
+                            if((p_mouvementFait.getLast().getX() != p_tuile.getTuileHautGauche().getTuileHautGauche().getX() && p_mouvementFait.getLast().getY() != p_tuile.getTuileHautGauche().getTuileHautGauche().getY())  || p_mouvementFait .size() == 1){
+                                Arrete = false;
+                                LinkedList<Tuile> listtmp = new LinkedList<Tuile>();
+                                listtmp.addAll(p_mouvementFait);
+                                listtmp.add(p_tuile.getTuileHautGauche().getTuileHautGauche());
+                                detecterNbMovementPion(p_tuile.getTuileHautGauche().getTuileHautGauche(), listtmp);
+                            }
+
                         }
                     }
                 }
@@ -637,11 +643,14 @@ public class Damier implements Cloneable{
                 if(!estVideTuile(p_tuile.getTuileHautDroite())){
                     if(estVideTuile(p_tuile.getTuileHautDroite().getTuileHautDroite())){
                         if(getCouleurPionSurTuile(p_mouvementFait.get(0)) != getCouleurPionSurTuile(p_tuile.getTuileHautDroite())){
-                            Arrete = false;
-                            LinkedList<Tuile> listtmp = new LinkedList<Tuile>();
-                            listtmp.addAll(p_mouvementFait);
-                            listtmp.add(p_tuile.getTuileHautDroite().getTuileHautDroite());
-                            detecterNbMovementPion(p_tuile.getTuileHautDroite().getTuileHautDroite(), listtmp);
+                            if((p_mouvementFait.getLast().getX() != p_tuile.getTuileHautDroite().getTuileHautDroite().getX()
+                                    && p_mouvementFait.getLast().getY() != p_tuile.getTuileHautDroite().getTuileHautDroite().getY()) || p_mouvementFait .size() == 1){
+                                Arrete = false;
+                                LinkedList<Tuile> listtmp = new LinkedList<Tuile>();
+                                listtmp.addAll(p_mouvementFait);
+                                listtmp.add(p_tuile.getTuileHautDroite().getTuileHautDroite());
+                                detecterNbMovementPion(p_tuile.getTuileHautDroite().getTuileHautDroite(), listtmp);
+                            }
                         }
                     }
                 }
@@ -652,11 +661,14 @@ public class Damier implements Cloneable{
                 if(!estVideTuile(p_tuile.getTuileBasDroite())){
                     if(estVideTuile(p_tuile.getTuileBasDroite().getTuileBasDroite())){
                         if(getCouleurPionSurTuile(p_tuile) != getCouleurPionSurTuile(p_tuile.getTuileBasDroite())){
-                            Arrete = false;
-                            LinkedList<Tuile> listtmp = new LinkedList<Tuile>();
-                            listtmp.addAll(p_mouvementFait);
-                            listtmp.add(p_tuile.getTuileBasDroite().getTuileBasDroite());
-                            detecterNbMovementPion(p_tuile.getTuileBasDroite().getTuileBasDroite(), listtmp);
+                            if(p_mouvementFait.getLast().getX() != p_tuile.getTuileBasDroite().getTuileBasDroite().getX() || p_mouvementFait .size() == 1){
+                                Arrete = false;
+                                LinkedList<Tuile> listtmp = new LinkedList<Tuile>();
+                                listtmp.addAll(p_mouvementFait);
+                                listtmp.add(p_tuile.getTuileBasDroite().getTuileBasDroite());
+                                detecterNbMovementPion(p_tuile.getTuileBasDroite().getTuileBasDroite(), listtmp);
+                            }
+
                         }
                     }
                 }
@@ -667,11 +679,14 @@ public class Damier implements Cloneable{
                 if(!estVideTuile(p_tuile.getTuileBasGauche())){
                     if(estVideTuile(p_tuile.getTuileBasGauche().getTuileBasGauche())){
                         if(getCouleurPionSurTuile(p_tuile) != getCouleurPionSurTuile(p_tuile.getTuileBasGauche())){
-                            Arrete = false;
-                            LinkedList<Tuile> listtmp = new LinkedList<Tuile>();
-                            listtmp.addAll(p_mouvementFait);
-                            listtmp.add(p_tuile.getTuileBasGauche().getTuileBasGauche());
-                            detecterNbMovementPion(p_tuile.getTuileBasGauche().getTuileBasGauche(), listtmp);
+                            if(p_mouvementFait.getLast().getX() != p_tuile.getTuileHautGauche().getTuileHautGauche().getX() || p_mouvementFait .size() == 1){
+                                Arrete = false;
+                                LinkedList<Tuile> listtmp = new LinkedList<Tuile>();
+                                listtmp.addAll(p_mouvementFait);
+                                listtmp.add(p_tuile.getTuileBasGauche().getTuileBasGauche());
+                                detecterNbMovementPion(p_tuile.getTuileBasGauche().getTuileBasGauche(), listtmp);
+                            }
+
                         }
                     }
                 }
@@ -914,6 +929,9 @@ public class Damier implements Cloneable{
                 listTmp.clear();
                 listTmp.add(liste);
                 nbMax = liste.size();
+                if((liste.get(0).getX() + 2 == liste.get(1).getX()) || (liste.get(0).getX() - 2 == liste.get(1).getX() )){
+                    mange = true;
+                }
 
             } else if (liste.size() == nbMax) {
                 if(liste.get(0).getX() == 5 && liste.get(0).getY() == 2){

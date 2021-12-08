@@ -260,7 +260,7 @@ public class JeuFragment extends Fragment {
                     }
                     m_derniereTuile = tuileActuel;
                 }
-                else if (m_derniereTuile != null) {
+                if (m_derniereTuile != null) {
                     if ((m_damier.getCouleurPionSurTuile(m_derniereTuile) == Pion.Couleur.NOIR &&
                             !m_damier.getestTourJoueurBlanc()) ||
                             (m_damier.getCouleurPionSurTuile(m_derniereTuile) == Pion.Couleur.BLANC
