@@ -101,8 +101,14 @@ public class Damier implements Cloneable{
                     ajouterPion(tuile, null);
 
 
-                }/*
-                    blanc 4 x 5 y
+                }
+               /* viderBoard();
+                ajouterPion(new Tuile(4,5), new Pion(Pion.Couleur.BLANC));
+                ajouterPion(new Tuile(5,4), new Pion(Pion.Couleur.NOIR));
+                ajouterPion(new Tuile(7,2), new Pion(Pion.Couleur.NOIR));
+                ajouterPion(new Tuile(3,4), new Pion(Pion.Couleur.NOIR));
+
+                    /*blanc 4 x 5 y
                     noir  5 x 4 y
                     noir  7 x 2 y
                     noir  3 x 4 y*/
@@ -324,21 +330,25 @@ public class Damier implements Cloneable{
      * @param p_nouvelleTuile la nouvelle position du pion
      */
     public void deplacerPion( Tuile p_nouvelleTuile, Tuile p_ancienneTuile) {
-        Pion pion = getPion(new Tuile(p_ancienneTuile.getX(), p_ancienneTuile.getY()));
-        m_tuiles.put(new Tuile(p_nouvelleTuile.getX(), p_nouvelleTuile.getY()), pion);
-        m_tuiles.put(new Tuile(p_ancienneTuile.getX(), p_ancienneTuile.getY()), null);
+        try{
+            Pion pion = getPion(new Tuile(p_ancienneTuile.getX(), p_ancienneTuile.getY()));
+            m_tuiles.put(new Tuile(p_nouvelleTuile.getX(), p_nouvelleTuile.getY()), pion);
+            m_tuiles.put(new Tuile(p_ancienneTuile.getX(), p_ancienneTuile.getY()), null);
 
 
-        if (pion.estBlanc()) {
-            if (p_nouvelleTuile.getY() == 0) {
-                transformerPion(p_nouvelleTuile);
-            }
-        } else {
-            if (p_nouvelleTuile.getY() == 9) {
-                transformerPion(p_nouvelleTuile);
+            if (pion.estBlanc()) {
+                if (p_nouvelleTuile.getY() == 0) {
+                    transformerPion(p_nouvelleTuile);
+                }
+            } else {
+                if (p_nouvelleTuile.getY() == 9) {
+                    transformerPion(p_nouvelleTuile);
+                }
             }
         }
+        catch (NullPointerException ex){
 
+        }
     }
 
     /**
@@ -387,7 +397,7 @@ public class Damier implements Cloneable{
      */
     public LinkedList<Tuile> obtenirCasesDisponibles(Tuile p_tuile) throws CloneNotSupportedException {
         getToutMouvement();
-        LinkedList<Tuile> liste = new LinkedList<Tuile>();
+        Set<Tuile> liste = new HashSet<>();
         for (LinkedList<Tuile> list:
                 listeMove) {
             if(list.get(0).getX() == p_tuile.getX() && list.get(0).getY() == p_tuile.getY()){
@@ -395,7 +405,9 @@ public class Damier implements Cloneable{
             }
 
         }
-        return liste;
+        LinkedList<Tuile> list = new LinkedList<Tuile>();
+        list.addAll(liste);
+        return list;
     }
 
 
@@ -406,8 +418,17 @@ public class Damier implements Cloneable{
      * @param p_choix la tuile où on veut se déplacer
      */
     public void gererDeplacement(Tuile p_tuile, Tuile p_choix) throws CloneNotSupportedException {
-        getToutMouvement();
-        ArrayList<Integer> arrayList = new ArrayList<Integer>();
+        LinkedList<LinkedList<Tuile>> listeMoveFiltrer = new LinkedList<>();
+        for (LinkedList<Tuile> liste: listeMove) {
+            if (liste.get(0) == p_tuile && liste.get(1) == p_choix){
+                if (listeMoveFiltrer.contains(liste)) listeMove.remove(liste);
+                else{
+                    listeMoveFiltrer.add(liste);
+                }
+
+            }
+        }
+
         LinkedList<LinkedList<Tuile>> choixExact = new LinkedList<>();
         for(Integer i = 0; i!= listeMove.size(); i++){
             if(listeMove.get(i).get(0).getX() == p_tuile.getX() && listeMove.get(i).get(0).getY() == p_tuile.getY()
@@ -417,11 +438,13 @@ public class Damier implements Cloneable{
         }
         listeMove = choixExact;
         trouverRelationSupprimer(p_tuile, p_choix);
-        deplacerPion(p_choix, p_tuile);
-        if (p_choix == listeMove.getLast().getLast()){
-            m_estTourJoueurBlanc = !m_estTourJoueurBlanc;
-        }
 
+        if(listeMove.size() != 0){
+            deplacerPion(p_choix, p_tuile);
+            if (p_choix == listeMove.getLast().getLast()){
+                m_estTourJoueurBlanc = !m_estTourJoueurBlanc;
+            }
+        }
     }
     public void trouverRelationSupprimer(Tuile p_tuile, Tuile p_choix){
         boolean caseTrouver = false;
@@ -432,6 +455,7 @@ public class Damier implements Cloneable{
 
             try{
                 caseTrouver = tuileTmp.getTuileHautGauche() == p_choix;
+                if (caseTrouver) break;
                 tuileTmp = tuileTmp.getTuileHautGauche();
                 listeCaseSupprimer.add(tuileTmp);
 
@@ -445,6 +469,7 @@ public class Damier implements Cloneable{
         while (!caseTrouver){
             try{
                 caseTrouver = tuileTmp.getTuileHautDroite() == p_choix;
+                if (caseTrouver) break;
                 tuileTmp = tuileTmp.getTuileHautDroite();
                 listeCaseSupprimer.add(tuileTmp);
 
@@ -458,6 +483,7 @@ public class Damier implements Cloneable{
         while (!caseTrouver){
             try{
                 caseTrouver = tuileTmp.getTuileBasGauche()== p_choix;
+                if (caseTrouver) break;
                 tuileTmp = tuileTmp.getTuileBasGauche();
                 listeCaseSupprimer.add(tuileTmp);
 
@@ -471,6 +497,7 @@ public class Damier implements Cloneable{
         while (!caseTrouver){
             try{
                 caseTrouver = tuileTmp.getTuileBasDroite() == p_choix;
+                if (caseTrouver) break;
                 tuileTmp = tuileTmp.getTuileBasDroite();
                 listeCaseSupprimer.add(tuileTmp);
 
@@ -480,7 +507,7 @@ public class Damier implements Cloneable{
                 break;
             }
         }
-        tuileTmp= p_tuile;
+
         if(caseTrouver){
             for (Tuile tuile: listeCaseSupprimer) {
                 supprimerPion(tuile);
@@ -556,8 +583,7 @@ public class Damier implements Cloneable{
     }
     public void getToutMouvement() throws CloneNotSupportedException {
         listeMove.clear();
-        for (Tuile t:
-                m_tuiles.keySet()) {
+        for (Tuile t: m_tuiles.keySet()) {
             if(t != null){
                 if(getPion(t) != null){
                     if((m_estTourJoueurBlanc && getCouleurPionSurTuile(t) == Pion.Couleur.BLANC) || (!m_estTourJoueurBlanc && getCouleurPionSurTuile(t) == Pion.Couleur.NOIR)){
@@ -637,15 +663,15 @@ public class Damier implements Cloneable{
             }
 
             //Haut gauche
-            if(p_tuile.getTuileHautGauche() != null && p_tuile.getTuileHautGauche().getTuileHautGauche() != null){
-                if(!estVideTuile(p_tuile.getTuileHautGauche())){
-                    if(estVideTuile(p_tuile.getTuileHautGauche().getTuileHautGauche())){
-                        if(getCouleurPionSurTuile(p_tuile) != getCouleurPionSurTuile(p_tuile.getTuileHautGauche())){
+            if(p_tuile.getTuileBasGauche() != null && p_tuile.getTuileBasGauche().getTuileBasGauche() != null){
+                if(!estVideTuile(p_tuile.getTuileBasGauche())){
+                    if(estVideTuile(p_tuile.getTuileBasGauche().getTuileBasGauche())){
+                        if(getCouleurPionSurTuile(p_tuile) != getCouleurPionSurTuile(p_tuile.getTuileBasGauche())){
                             Arrete = false;
                             LinkedList<Tuile> listtmp = new LinkedList<Tuile>();
                             listtmp.addAll(p_mouvementFait);
-                            listtmp.add(p_tuile.getTuileHautGauche().getTuileHautGauche());
-                            detecterNbMovementPion(p_tuile.getTuileHautGauche().getTuileHautGauche(), listtmp);
+                            listtmp.add(p_tuile.getTuileBasGauche().getTuileBasGauche());
+                            detecterNbMovementPion(p_tuile.getTuileBasGauche().getTuileBasGauche(), listtmp);
                         }
                     }
                 }
@@ -876,9 +902,10 @@ public class Damier implements Cloneable{
 
 
     public void filtrerListe(){
-        int nbMax = 1;
+        int nbMax = 0;
         LinkedList<LinkedList<Tuile>> listTmp = new LinkedList<>();
         boolean mange = false;
+        boolean estNoir = false;
         //Checker si il mange
         //si oui clear la liste et rentrer dans un cas ou on ajoute seulement s'il mange
         for (LinkedList<Tuile> liste:
@@ -887,8 +914,34 @@ public class Damier implements Cloneable{
                 listTmp.clear();
                 listTmp.add(liste);
                 nbMax = liste.size();
+
             } else if (liste.size() == nbMax) {
-                listTmp.add(liste);
+                if(liste.get(0).getX() == 5 && liste.get(0).getY() == 2){
+                    estNoir = false;
+                }
+                if (getPion(liste.get(0)) instanceof Dame ){
+
+                }
+                else{
+
+                    if (mange){
+
+                        if ((liste.get(0).getX() + 2 == liste.get(1).getX()) || (liste.get(0).getX() - 2 == liste.get(1).getX() )) {
+                            listTmp.add(liste);
+                        }
+                    }
+                    else {
+
+                        if ((liste.get(0).getX() + 2 == liste.get(1).getX()) || (liste.get(0).getX() - 2 == liste.get(1).getX()) ) {
+                            mange = true;
+                            listTmp.clear();
+                            listTmp.add(liste);
+                        }
+                        else{
+                            listTmp.add(liste);
+                        }
+                    }
+                }
             }
         listeMove = listTmp;
     }

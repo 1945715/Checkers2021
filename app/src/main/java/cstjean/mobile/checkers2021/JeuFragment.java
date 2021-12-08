@@ -286,6 +286,7 @@ public class JeuFragment extends Fragment {
                         }
                     }
                 }
+
             }
         };
 
