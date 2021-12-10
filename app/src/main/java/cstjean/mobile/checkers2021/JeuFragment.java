@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -20,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -127,7 +127,6 @@ public class JeuFragment extends Fragment {
                         m_damier.initialiser();
                         Pattern regex = Pattern.compile("\\d+");
 
-
                         for (String manoury : m_listeManouryMouvement) {
                             Matcher matcher = regex.matcher(manoury);
 
@@ -144,32 +143,26 @@ public class JeuFragment extends Fragment {
                             if (deuxiemeNombreTrouver) {
                                 nombre2 = manoury.substring(matcher.start(), matcher.end());
                             }
-
-
                             int[] coordoneesNombre1 = transformerManouryEnPosition(nombre1);
                             int[] coordoneesNombre2 = transformerManouryEnPosition(nombre2);
 
                             Tuile tuile1 = new Tuile(coordoneesNombre1[0], coordoneesNombre1[1]);
                             Tuile tuile2 = new Tuile(coordoneesNombre2[0], coordoneesNombre2[1]);
-
-
+                            m_damier.gererDeplacementPrecédant(tuile1,tuile2);
                         }
 
-                        mettreJeuAJour(nomJoueurBlanc, nomJoueurNoir);
+                        rafraichirJeu(nomJoueurBlanc, nomJoueurNoir);
                     }
-
-
                 }
 
             }
         });
 
-
         // Onclick d'une tuile
         final View.OnClickListener clickTuile = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mettreJeuAJour(nomJoueurBlanc, nomJoueurNoir);
+                rafraichirJeu(nomJoueurBlanc, nomJoueurNoir);
 
                 // Détermine les coordonnées du bouton en X et Y
                 String indexBoutonString = v.getTag().toString();
@@ -180,57 +173,6 @@ public class JeuFragment extends Fragment {
                 boolean aBouger = false;
                 Tuile tuileActuel = m_damier.getTuile(xBouton, yBouton);
 
-
-                // Code pour le deuxième Click
-                /*if (m_derniereTuile != null) {
-                    if ((m_damier.getCouleurPionSurTuile(m_derniereTuile) == Pion.Couleur.NOIR &&
-                            !m_damier.getestTourJoueurBlanc()) ||
-                            (m_damier.getCouleurPionSurTuile(m_derniereTuile) == Pion.Couleur.BLANC
-                                    && m_damier.getestTourJoueurBlanc())) {
-                        if (!m_damier.estVideTuile(m_derniereTuile)) {
-                            try {
-                                for (Tuile tuile : m_damier.obtenirCasesDisponibles(m_derniereTuile)) {
-                                    if (tuile.equals(tuileActuel)) {
-                                        int nbPion = m_damier.getNbPions();
-
-                                        mettreJeuAJour(nomJoueurBlanc, nomJoueurNoir);
-                                        aBouger = true;
-
-                                        // Etablissement notation manoury
-                                        m_damier.determinerNotationManoury(tuileActuel,
-                                                m_derniereTuile, nbPion);
-
-                                        updateListeNotationManoury();
-
-                                        // Verification de la victoire
-
-                                        Pion.Couleur couleurOppose = Pion.Couleur.NOIR;
-
-                                        if (m_damier.getCouleurPionSurTuile(tuileActuel)
-                                                == Pion.Couleur.NOIR) {
-                                            couleurOppose = Pion.Couleur.BLANC;
-                                        }
-
-                                        if (verifieAPerdu(couleurOppose)) {
-                                            String texteGagnant =
-                                                    getString(R.string.texte_gagnant) + " " +
-                                                            m_damier.getCouleurPionSurTuile
-                                                                    (tuileActuel).toString();
-                                            Toast toastGagnant
-                                                    = Toast.makeText(getContext(), texteGagnant,
-                                                    Toast.LENGTH_LONG);
-                                            toastGagnant.show();
-                                        }
-
-                                    }
-                                }
-                            } catch (CloneNotSupportedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    m_derniereTuile = null;
-                }*/
                 // premier click
                 if (tuileActuel != null &&
                         !aBouger &&
@@ -251,10 +193,9 @@ public class JeuFragment extends Fragment {
                             }
                         } else if (m_damier.getPion(tuileActuel).getCouleur() ==
                                 Pion.Couleur.NOIR && !m_damier.getestTourJoueurBlanc()) {
-                            for (Tuile tuile : tuileDispo) {
+                            for (Tuile tuile : Objects.requireNonNull(tuileDispo)) {
                                 m_listeButton[transformerCoordonneesEnNombre(tuile.getX(),
-                                        tuile.getY())].setImageResource
-                                        (R.drawable.ic_pion_possible);
+                                        tuile.getY())].setImageResource(R.drawable.ic_pion_possible);
                             }
                         }
                     }
@@ -263,17 +204,16 @@ public class JeuFragment extends Fragment {
                 if (m_derniereTuile != null) {
                     if ((m_damier.getCouleurPionSurTuile(m_derniereTuile) == Pion.Couleur.NOIR &&
                             !m_damier.getestTourJoueurBlanc()) ||
-                            (m_damier.getCouleurPionSurTuile(m_derniereTuile) == Pion.Couleur.BLANC
-                                    && m_damier.getestTourJoueurBlanc())) {
+                            (m_damier.getCouleurPionSurTuile(m_derniereTuile) == Pion.Couleur.BLANC &&
+                                    m_damier.getestTourJoueurBlanc())) {
                         if (!m_damier.estVideTuile(m_derniereTuile)) {
                             try {
-                                for (Tuile tuile : m_damier.obtenirCasesDisponibles(m_derniereTuile)){
+                                for (Tuile tuile : m_damier.obtenirCasesDisponibles(m_derniereTuile)) {
                                     if (tuile.equals(tuileActuel)) {
                                         int nbPion = m_damier.getNbPions();
 
                                         m_damier.gererDeplacement(m_derniereTuile, tuileActuel);
-                                        mettreJeuAJour(nomJoueurBlanc, nomJoueurNoir);
-                                        aBouger = true;
+                                        rafraichirJeu(nomJoueurBlanc, nomJoueurNoir);
                                         m_damier.determinerNotationManoury(tuileActuel,
                                                 m_derniereTuile, nbPion);
 
@@ -285,18 +225,31 @@ public class JeuFragment extends Fragment {
                             }
                         }
                     }
+                    if (m_damier.getestTourJoueurBlanc()) {
+                        try {
+                            if (verifierDefaite(Pion.Couleur.BLANC)) {
+                                texteTourNom.setText(R.string.texte_gagnant_noir);
+                            }
+                        } catch (CloneNotSupportedException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            if (verifierDefaite(Pion.Couleur.NOIR)) {
+                                texteTourNom.setText(R.string.texte_gagnant_blanc);
+                            }
+                        } catch (CloneNotSupportedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
 
             }
         };
 
+
         // Click du bouton recommencer
-        boutonRecommencer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reinitialiserJeu(nomJoueurBlanc, nomJoueurNoir);
-            }
-        });
+        boutonRecommencer.setOnClickListener(v1 -> reinitialiserJeu(nomJoueurBlanc, nomJoueurNoir));
 
         initialiserJeux(v, clickTuile, nomJoueurBlanc, nomJoueurNoir);
 
@@ -307,42 +260,37 @@ public class JeuFragment extends Fragment {
         return v;
     }
 
-
     /**
-     * Permet d'initialiser le jeu avec ses boutons
+     * Permet d'initialiser le jeu avec ses boutons.
      *
-     * @param p_v              la vue du layout
-     * @param p_onClickButton  le onClickListener qu'on applique sur tout les boutons initialement
-     * @param p_nomJoueurBlanc Le nom du joueur les pions blanc
-     * @param p_nomJoueurNoir  Le nom du joueur avec les pions noir
+     * @param view              la vue du layout
+     * @param onClickButton  le onClickListener qu'on applique sur tout les boutons initialement
+     * @param nomJoueurBlanc Le nom du joueur les pions blanc
+     * @param nomJoueurNoir  Le nom du joueur avec les pions noir
      */
-    public void initialiserJeux(View p_v, View.OnClickListener p_onClickButton,
-                                String p_nomJoueurBlanc, String p_nomJoueurNoir) {
-        m_layoutJeu = p_v.findViewById(R.id.layout_jeu);
+    public void initialiserJeux(View view, View.OnClickListener onClickButton,
+                                String nomJoueurBlanc, String nomJoueurNoir) {
+        m_layoutJeu = view.findViewById(R.id.layout_jeu);
 
         // Création des boutons du jeu
         for (int y = 0; y < 10; y++) {
             for (int x = 0; x < 10; x++) {
 
-                ImageButton bouton = new ImageButton(p_v.getContext());
+                ImageButton bouton = new ImageButton(view.getContext());
 
                 int dizaine = y * 10;
 
                 if (y % 2 == 0) {
                     if (x % 2 == 0) {
-                        bouton.setBackgroundColor(getResources().
-                                getColor(R.color.couleurCaseBlanche));
+                        bouton.setBackgroundColor(getResources().getColor(R.color.couleurCaseBlanche));
                     } else {
-                        bouton.setBackgroundColor(getResources().
-                                getColor(R.color.couleurCaseBeige));
+                        bouton.setBackgroundColor(getResources().getColor(R.color.couleurCaseBeige));
                     }
                 } else {
                     if (x % 2 == 1) {
-                        bouton.setBackgroundColor(getResources().
-                                getColor(R.color.couleurCaseBlanche));
+                        bouton.setBackgroundColor(getResources().getColor(R.color.couleurCaseBlanche));
                     } else {
-                        bouton.setBackgroundColor(getResources().
-                                getColor(R.color.couleurCaseBeige));
+                        bouton.setBackgroundColor(getResources().getColor(R.color.couleurCaseBeige));
                     }
                 }
 
@@ -351,20 +299,23 @@ public class JeuFragment extends Fragment {
                 bouton.setPadding(15, 15, 15, 15);
                 GridLayout.LayoutParams param = new GridLayout.LayoutParams();
                 bouton.setLayoutParams(param);
-                bouton.setOnClickListener(p_onClickButton);
+                bouton.setOnClickListener(onClickButton);
                 m_listeButton[dizaine + x] = bouton;
 
                 m_layoutJeu.addView(bouton);
             }
 
         }
-        mettreJeuAJour(p_nomJoueurBlanc, p_nomJoueurNoir);
+        rafraichirJeu(nomJoueurBlanc, nomJoueurNoir);
     }
 
     /**
-     * Permet de mettre à jour l'interface du jeu selon les données contenues dans la Map du damier
+     * Permet de mettre à jour l'interface du jeu selon les données contenues dans la Map du damier.
+     *
+     * @param nomJoueurBlanc le nom du joueur avec les pions blanc
+     * @param nomJoueurNoir  le nom du joueur avec les pions noir
      */
-    public void mettreJeuAJour(String p_nomJoueurBlanc, String p_nomJoueurNoir) {
+    public void rafraichirJeu(String nomJoueurBlanc, String nomJoueurNoir) {
         String auTourDe;
 
         for (Tuile tuile : m_damier.getTuiles().keySet()) {
@@ -391,82 +342,82 @@ public class JeuFragment extends Fragment {
         }
 
         if (m_damier.getestTourJoueurBlanc()) {
-            auTourDe = getString(R.string.texte_tour_joueur) + p_nomJoueurBlanc;
+            auTourDe = getString(R.string.texte_tour_joueur) + nomJoueurBlanc;
         } else {
-            auTourDe = getString(R.string.texte_tour_joueur) + p_nomJoueurNoir;
+            auTourDe = getString(R.string.texte_tour_joueur) + nomJoueurNoir;
         }
 
         texteTourNom.setText(auTourDe);
     }
 
     /**
-     * Permet de reinitialiser l'interface du jeu de dame
+     * Permet de reinitialiser l'interface du jeu de dame.
      *
-     * @param p_nomJoueurBlanc le nom du joueur avec les pions blanc
-     * @param p_nomJoueurNoir  le nom du joueur avec les pions noir
+     * @param nomJoueurBlanc le nom du joueur avec les pions blanc
+     * @param nomJoueurNoir  le nom du joueur avec les pions noir
      */
-    public void reinitialiserJeu(String p_nomJoueurBlanc, String p_nomJoueurNoir) {
+    public void reinitialiserJeu(String nomJoueurBlanc, String nomJoueurNoir) {
         m_damier.initialiser();
-        mettreJeuAJour(p_nomJoueurBlanc, p_nomJoueurNoir);
+        rafraichirJeu(nomJoueurBlanc, nomJoueurNoir);
         m_listeManouryMouvement.clear();
         updateListeNotationManoury();
+        for (ImageButton button : m_listeButton) {
+            button.setEnabled(true);
+        }
     }
 
     /**
-     * Permet de vérifier si une des deux couleurs de pions à gagnés la partie
+     * Permet de vérifier si une des deux couleurs de pions à gagnés la partie.
      *
-     * @param p_couleur la couleur de l'équipe de pion
-     * @return vrai si la couleur de l'équipe qu'on a reçu à perdu la partie
-     * faux si ils n'ont pas perdu
+     * @param couleur la couleur de l'équipe de pion
+     * @return vrai si la couleur de l'équipe qu'on a reçu à perdu la partie, faux si ils n'ont pas perdu
      */
-    public boolean verifieAPerdu(Pion.Couleur p_couleur) throws CloneNotSupportedException {
-        return (m_damier.verifierPeuxPasBouger(p_couleur) ||
-                m_damier.verifierResteAucunPion(p_couleur));
+    public boolean verifierDefaite(Pion.Couleur couleur) throws CloneNotSupportedException {
+        return (m_damier.verifierPeuxPasBouger(couleur));
     }
 
     /**
-     * Permet de mettre à jour l'affichage de la liste contenant les notations manoury
+     * Permet de mettre à jour l'affichage de la liste contenant les notations manoury.
      */
     private void updateListeNotationManoury() {
-        JeuAdapter m_adapterJeu = new JeuAdapter(m_listeManouryMouvement);
-        m_recyclerViewJeu.setAdapter(m_adapterJeu);
+        JeuAdapter adapterJeu = new JeuAdapter(m_listeManouryMouvement);
+        m_recyclerViewJeu.setAdapter(adapterJeu);
     }
-
 
     /**
      * ViewHolder pour notre RecyclerView de notation manoury.
      *
      * @author Sébastien Fortier
      * @author Yoan Gauthier
+     * @author Hakim-Anis Hamani
      */
     private static class JeuHolder extends RecyclerView.ViewHolder {
 
         /**
          * TextView pour la notation manoury.
          */
-        final TextView m_manoury;
+        final TextView manoury;
 
         /**
          * Constructeur.
          *
-         * @param p_itemView Le layout associé au ViewHolder
+         * @param itemView Le layout associé au ViewHolder
          */
-        JeuHolder(View p_itemView) {
-            super(p_itemView);
+        JeuHolder(View itemView) {
+            super(itemView);
 
-            m_manoury = p_itemView.findViewById(R.id.notation_manoury);
+            manoury = itemView.findViewById(R.id.notation_manoury);
         }
 
         /**
          * On associe une notation manoury à ce ViewHolder.
          *
-         * @param p_manoury La notation manoury associé
+         * @param manoury La notation manoury associé
          */
-        void bindPositionTour(String p_manoury) {
-            m_manoury.setText(p_manoury);
+        void bindPositionTour(String manoury) {
+            this.manoury.setText(manoury);
         }
     }
-
 
     /**
      * Adapter pour notre RecyclerView de notation manoury.
@@ -479,30 +430,30 @@ public class JeuFragment extends Fragment {
         /**
          * La liste des notations manoury à afficher.
          */
-        private final List<String> m_listeDeNotationManoury;
+        private final List<String> listeDeNotationManoury;
 
         /**
          * Constructeur.
          *
-         * @param p_listeDeNotationManoury La liste des notations manoury à affficher
+         * @param listeDeNotationManoury La liste des notations manoury à affficher
          */
-        JeuAdapter(List<String> p_listeDeNotationManoury) {
-            m_listeDeNotationManoury = p_listeDeNotationManoury;
+        JeuAdapter(List<String> listeDeNotationManoury) {
+            this.listeDeNotationManoury = listeDeNotationManoury;
         }
 
         /**
          * Lors de la création des ViewHolder.
          *
-         * @param p_parent   Layout dans lequel la nouvelle vue
+         * @param parent   Layout dans lequel la nouvelle vue
          *                   sera ajoutée quand elle sera liée à une position
-         * @param p_viewType Le type de vue de la nouvelle vue
+         * @param viewType Le type de vue de la nouvelle vue
          * @return Un ViewHolder pour notre cellule
          */
         @NonNull
         @Override
-        public JeuHolder onCreateViewHolder(@NonNull ViewGroup p_parent, int p_viewType) {
+        public JeuHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.item_historique_deplacement, p_parent,
+            View view = layoutInflater.inflate(R.layout.item_historique_deplacement, parent,
                     false);
             return new JeuHolder(view);
         }
@@ -510,21 +461,23 @@ public class JeuFragment extends Fragment {
         /**
          * Associe un élément à un ViewHolder.
          *
-         * @param p_holder   Le ViewHolder à utiliser
-         * @param p_position La position dans la liste qu'on souhaite utiliser
+         * @param holder   Le ViewHolder à utiliser
+         * @param position La position dans la liste qu'on souhaite utiliser
          */
         @Override
-        public void onBindViewHolder(@NonNull JeuHolder p_holder, int p_position) {
-            String manoury = m_listeDeNotationManoury.get(p_position);
-            p_holder.bindPositionTour(manoury);
+        public void onBindViewHolder(@NonNull JeuHolder holder, int position) {
+            String manoury = listeDeNotationManoury.get(position);
+            holder.bindPositionTour(manoury);
         }
 
         /**
+         * Permet de retourner la grandeur de liste de la notation.
+         *
          * @return Le nombre d'item total de notre liste
          */
         @Override
         public int getItemCount() {
-            return m_listeDeNotationManoury.size();
+            return listeDeNotationManoury.size();
         }
     }
 
@@ -532,14 +485,14 @@ public class JeuFragment extends Fragment {
      * Création d'une instance de notre Fragment. Pour contrôler
      * les données nécessaires pour la création.
      *
-     * @param p_nomJoueurBlanc Le nom du joueur avec les pions blancs
-     * @param p_nomJoueurNoir  Le nom du joueur avec les pions noirs
+     * @param nomJoueurBlanc Le nom du joueur avec les pions blancs
+     * @param nomJoueurNoir  Le nom du joueur avec les pions noirs
      * @return Le nouveau Fragment
      */
-    public static JeuFragment newInstance(String p_nomJoueurBlanc, String p_nomJoueurNoir) {
+    public static JeuFragment newInstance(String nomJoueurBlanc, String nomJoueurNoir) {
         Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_NOMJOUEURBLANC, p_nomJoueurBlanc);
-        bundle.putString(EXTRA_NOMJOUEURNOIR, p_nomJoueurNoir);
+        bundle.putString(EXTRA_NOMJOUEURBLANC, nomJoueurBlanc);
+        bundle.putString(EXTRA_NOMJOUEURNOIR, nomJoueurNoir);
 
         JeuFragment fragment = new JeuFragment();
         fragment.setArguments(bundle);

@@ -7,6 +7,7 @@
     <string name="message_erreur_nom">Les noms ne peuvent pas être vides</string>
     <string name="bouton_recommencer">RECOMMENCER</string>
     <string name="bouton_precedant">PRÉCÉDANT</string>
-    <string name="texte_gagnant">Bravo aux </string>
+    <string name="texte_gagnant_noir">Bravo au joueur noir </string>
+    <string name="texte_gagnant_blanc">Bravo au joueur blanc </string>
     <string name="texte_tour_joueur">C\'est le tour de: &#160;</string>
 </resources>
