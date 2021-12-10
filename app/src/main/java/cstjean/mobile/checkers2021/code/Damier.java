@@ -961,10 +961,15 @@ public class Damier implements Cloneable {
                     }
                     listTmp.add(tuileTmp.getTuileBasGauche());
                     listeMove.add(listTmp);
-                }
-                else if (getCouleurPionSurTuile(tuileTmp.getTuileBasGauche()) != getCouleurPionSurTuile(tuile)) {
+                } else if (getCouleurPionSurTuile(tuileTmp.getTuileBasGauche()) != getCouleurPionSurTuile(tuile)) {
                     if (damierTmp.estVideTuile(tuileTmp.getTuileBasGauche().getTuileBasGauche())) {
-
+                        damierTmp.supprimerPion(tuileTmp.getTuileBasGauche());
+                        damierTmp.deplacerPion(tuileOriginale, tuileTmp.getTuileBasGauche().getTuileBasGauche());
+                        listTmp.add(tuileTmp.getTuileBasGauche().getTuileBasGauche());
+                        listeMove.add(listTmp);
+                        detecterNbDeplacementDame(tuileTmp.getTuileBasGauche().getTuileBasGauche(), listTmp, damierTmp, Direction.BAS_GAUCHE);
+                    } else {
+                        break;
                     }
                 }else {
                     break;
@@ -973,6 +978,8 @@ public class Damier implements Cloneable {
                 break;
             }
         }
+        damierTmp = damier.clone();
+        tuileTmp = damierTmp.getTuile(tuile.getX(), tuile.getY());
         /* HautGauche */
         while (true) {
             try {
@@ -1032,38 +1039,8 @@ public class Damier implements Cloneable {
         }
         damierTmp = damier.clone();
         tuileTmp = damierTmp.getTuile(tuile.getX(), tuile.getY());
-        /* BasGauche*/
-        while (true) {
-            try {
-                LinkedList<Tuile> listTmp = new LinkedList<>(mouvementFait);
-                if (damierTmp.estVideTuile(tuileTmp.getTuileBasGauche())) {
-                    if (direction == Direction.BAS_GAUCHE || direction == null) {
-                        if (listTmp.size() > 1) {
-                            listTmp.removeLast();
-                        }
-                        listTmp.add(tuileTmp.getTuileBasGauche());
-                        listeMove.add(listTmp);
-                    }
-                }else if (damierTmp.getCouleurPionSurTuile(damier.getTuile(tuileTmp.getTuileBasGauche().getX(), tuileTmp.getTuileBasGauche().getY())) == damier.getCouleurPionSurTuile(tuile)) {
-                    break;
-                }else if (damierTmp.estVideTuile(tuileTmp.getTuileBasGauche().getTuileBasGauche()) && damierTmp.getCouleurPionSurTuile(tuileTmp.getTuileBasGauche()) != damierTmp.getCouleurPionSurTuile(tuile) ) {
 
-                    damierTmp.supprimerPion(tuileTmp.getTuileBasGauche());
-                    damierTmp.deplacerPion(tuileOriginale, tuileTmp.getTuileBasGauche().getTuileBasGauche());
-                    listTmp.add(tuileTmp.getTuileBasGauche().getTuileBasGauche());
-                    listeMove.add(listTmp);
-                    detecterNbDeplacementDame(tuileTmp.getTuileBasGauche().getTuileBasGauche(), listTmp, damierTmp, Direction.BAS_GAUCHE);
-                    tuileTmp = tuileTmp.getTuileBasGauche();
-                } else {
-                    break;
-                }
-                tuileTmp = tuileTmp.getTuileBasGauche();
-            } catch (NullPointerException e) {
-                break;
-            }
-        }
-        damierTmp = damier.clone();
-        tuileTmp = damierTmp.getTuile(tuile.getX(), tuile.getY());
+
         /* BasDroit*/
         while (true) {
             try {
