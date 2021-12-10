@@ -116,7 +116,7 @@ public class Damier implements Cloneable {
                     ajouterPion(tuile, null);
                 }
 
-                viderBoard();
+                /*viderBoard();
                 ajouterPion(new Tuile(5, 4), new Dame(Pion.Couleur.BLANC));
                 ajouterPion(new Tuile(7, 6), new Pion(Pion.Couleur.NOIR));
                 //LISTE D<ERREUR : BAS DROITE
@@ -167,20 +167,20 @@ public class Damier implements Cloneable {
         boolean faitPartiContour = false;
         if (tuile.getY() == 0) {
             if (tuile.getX() != 0) {
-                tuile.setTuileBasGauche(getTuile(tuile.getX() - 1, tuile.getY() + 1));
+
             }
             faitPartiContour = true;
             if (tuile.getX() != 9) {
-                tuile.setTuileBasDroite(getTuile(tuile.getX() + 1, tuile.getY() + 1));
+
             }
         }
         if (tuile.getY() == 9) {
             if (tuile.getX() != 0) {
-                tuile.setTuileHautGauche(getTuile(tuile.getX() - 1, tuile.getY() - 1));
+
             }
             faitPartiContour = true;
             if (tuile.getX() != 9) {
-                tuile.setTuileHautDroite(getTuile(tuile.getX() + 1, tuile.getY() - 1));
+
             }
         }
         if (tuile.getX() == 0) {
@@ -201,11 +201,24 @@ public class Damier implements Cloneable {
                 tuile.setTuileBasGauche(getTuile(tuile.getX() - 1, tuile.getY() + 1));
             }
         }
-        if (!faitPartiContour) {
+
+        try {
             tuile.setTuileBasGauche(getTuile(tuile.getX() - 1, tuile.getY() + 1));
-            tuile.setTuileHautGauche(getTuile(tuile.getX() - 1, tuile.getY() - 1));
+        }catch (NullPointerException e ){
+
+        } try {
             tuile.setTuileBasDroite(getTuile(tuile.getX() + 1, tuile.getY() + 1));
+        } catch (NullPointerException e ) {
+
+        }
+        try {
+            tuile.setTuileHautGauche(getTuile(tuile.getX() - 1, tuile.getY() - 1));
+        }catch (NullPointerException e ) {
+            /*C<est Normal*/
+        } try {
             tuile.setTuileHautDroite(getTuile(tuile.getX() + 1, tuile.getY() - 1));
+        } catch (NullPointerException e ) {
+
         }
     }
 
@@ -579,109 +592,116 @@ public class Damier implements Cloneable {
         boolean premierFois = true;
         LinkedList<Tuile> listePrecedante = new LinkedList<>();
         for (LinkedList<Tuile> liste : listeMove) {
-            // BasGauche
-            if (liste.get(0).getX() > liste.get(1).getX() && liste.get(0).getY() < liste.get(1).getY()) {
-                if (basGaucheUnlock) {
-                    list.add(liste.get(1));
-                } else {
-                    if (premierFois) {
-                        if (liste.get(0).getTuileBasGauche().getX() != liste.get(1).getX() && liste.get(0).getTuileBasGauche().getY() != liste.get(1).getY()) {
-                            basGaucheUnlock = true;
-                            list.add(liste.get(1));
-
-                        }
-                        premierFois = false;
-
+            if (getPion(getTuile(liste.get(0).getX(), liste.get(0).getY())) instanceof Dame) {
+                // BasGauche
+                if (liste.get(0).getX() > liste.get(1).getX() && liste.get(0).getY() < liste.get(1).getY()) {
+                    if (basGaucheUnlock) {
+                        list.add(liste.get(1));
                     } else {
-                        if (listePrecedante.get(1).getTuileBasGauche() != liste.get(1)) {
-                            basGaucheUnlock = true;
-                            list.add(liste.get(1));
-                        }
-                    }
-                    listePrecedante = liste;
+                        if (premierFois) {
+                            if (liste.get(0).getTuileBasGauche().getX() != liste.get(1).getX() && liste.get(0).getTuileBasGauche().getY() != liste.get(1).getY()) {
+                                basGaucheUnlock = true;
+                                list.add(liste.get(1));
 
+                            }
+                            premierFois = false;
+
+                        } else {
+                            if (listePrecedante.get(1).getTuileBasGauche() != liste.get(1)) {
+                                basGaucheUnlock = true;
+                                list.add(liste.get(1));
+                            }
+                        }
+                        listePrecedante = liste;
+
+                    }
                 }
             }
+
         }
         premierFois = true;
         listePrecedante = new LinkedList<>();
         for (LinkedList<Tuile> liste : listeMove) {
             // BasDroite
-            if (liste.get(0).getX() < liste.get(1).getX() && liste.get(0).getY() < liste.get(1).getY()) {
-                if (basDroitUnlock) {
-                    list.add(liste.get(1));
-                } else {
-                    if (premierFois) {
-                        if (liste.get(0).getTuileBasDroite().getX() != liste.get(1).getX() && liste.get(0).getTuileBasDroite().getY() != liste.get(1).getY()) {
-                            basDroitUnlock = true;
-                            list.add(liste.get(1));
-
-                        }
-                        premierFois = false;
-
+            if (getPion(getTuile(liste.get(0).getX(), liste.get(0).getY())) instanceof Dame) {
+                if (liste.get(0).getX() < liste.get(1).getX() && liste.get(0).getY() < liste.get(1).getY()) {
+                    if (basDroitUnlock) {
+                        list.add(liste.get(1));
                     } else {
-                        if (listePrecedante.get(1).getTuileBasDroite() != liste.get(1)) {
-                            basDroitUnlock = true;
-                            list.add(liste.get(1));
+                        if (premierFois) {
+                            if (liste.get(0).getTuileBasDroite().getX() != liste.get(1).getX() && liste.get(0).getTuileBasDroite().getY() != liste.get(1).getY()) {
+                                basDroitUnlock = true;
+                                list.add(liste.get(1));
+
+                            }
+                            premierFois = false;
+
+                        } else {
+                            if (listePrecedante.get(1).getTuileBasDroite() != liste.get(1)) {
+                                basDroitUnlock = true;
+                                list.add(liste.get(1));
+                            }
                         }
+                        listePrecedante = liste;
                     }
-                    listePrecedante = liste;
+
                 }
-
             }
-
         }
         premierFois = true;
         listePrecedante = new LinkedList<>();
         for (LinkedList<Tuile> liste : listeMove) {
             // HautGauche
-            if (liste.get(0).getX() > liste.get(1).getX() && liste.get(0).getY() > liste.get(1).getY()) {
-                if (hautGaucheUnlock) {
-                    list.add(liste.get(1));
-                } else {
-                    if (premierFois) {
-                        if (liste.get(0).getTuileHautGauche().getX() != liste.get(1).getX() && liste.get(0).getTuileHautGauche().getY() != liste.get(1).getY()) {
-                            hautGaucheUnlock = true;
-                            list.add(liste.get(1));
-
-                        }
-                        premierFois = false;
-
+            if (getPion(getTuile(liste.get(0).getX(), liste.get(0).getY())) instanceof Dame) {
+                if (liste.get(0).getX() > liste.get(1).getX() && liste.get(0).getY() > liste.get(1).getY()) {
+                    if (hautGaucheUnlock) {
+                        list.add(liste.get(1));
                     } else {
-                        if (listePrecedante.get(1).getTuileHautGauche() != liste.get(1)) {
-                            hautGaucheUnlock = true;
-                            list.add(liste.get(1));
+                        if (premierFois) {
+                            if (liste.get(0).getTuileHautGauche().getX() != liste.get(1).getX() && liste.get(0).getTuileHautGauche().getY() != liste.get(1).getY()) {
+                                hautGaucheUnlock = true;
+                                list.add(liste.get(1));
+
+                            }
+                            premierFois = false;
+
+                        } else {
+                            if (listePrecedante.get(1).getTuileHautGauche() != liste.get(1)) {
+                                hautGaucheUnlock = true;
+                                list.add(liste.get(1));
+                            }
                         }
+                        listePrecedante = liste;
                     }
-                    listePrecedante = liste;
                 }
             }
+
         }
 
         premierFois = true;
         listePrecedante = new LinkedList<>();
         for (LinkedList<Tuile> liste : listeMove) {
             // HautDroite
-            if (liste.get(0).getX() < liste.get(1).getX() && liste.get(0).getY() > liste.get(1).getY()) {
-                if (hautDroitUnlock) {
-                    list.add(liste.get(1));
-                } else {
-                    if (premierFois) {
-                        if (liste.get(0).getTuileHautDroite().getX() != liste.get(1).getX() && liste.get(0).getTuileHautDroite().getY() != liste.get(1).getY()) {
-                            hautDroitUnlock = true;
-                            list.add(liste.get(1));
-
-                        }
-                        premierFois = false;
+            if (getPion(getTuile(liste.get(0).getX(), liste.get(0).getY())) instanceof Dame) {
+                if (liste.get(0).getX() < liste.get(1).getX() && liste.get(0).getY() > liste.get(1).getY()) {
+                    if (hautDroitUnlock) {
+                        list.add(liste.get(1));
                     } else {
-                        if (listePrecedante.get(1).getTuileHautDroite() != liste.get(1)) {
-                            hautDroitUnlock = true;
-                            list.add(liste.get(1));
+                        if (premierFois) {
+                            if (liste.get(0).getTuileHautDroite().getX() != liste.get(1).getX() && liste.get(0).getTuileHautDroite().getY() != liste.get(1).getY()) {
+                                hautDroitUnlock = true;
+                                list.add(liste.get(1));
+                            }
+                            premierFois = false;
+                        } else {
+                            if (listePrecedante.get(1).getTuileHautDroite() != liste.get(1)) {
+                                hautDroitUnlock = true;
+                                list.add(liste.get(1));
+                            }
                         }
+                        listePrecedante = liste;
                     }
-                    listePrecedante = liste;
                 }
-
             }
         }
         return list;
@@ -759,7 +779,7 @@ public class Damier implements Cloneable {
                 if (getPion(t) != null) {
                     if ((estTourJoueurBlanc && getCouleurPionSurTuile(t) == Pion.Couleur.BLANC) || (!estTourJoueurBlanc && getCouleurPionSurTuile(t) == Pion.Couleur.NOIR)) {
                         if (getPion(t) instanceof Dame) {
-                            detecterNbDeplacementDame(getTuile(t.getX(), t.getY()), new LinkedList<>(), this, null);
+                            detecterNbDeplacementDame(getTuile(t.getX(), t.getY()), new LinkedList<>(), this, null, getCouleurPionSurTuile(getTuile(t.getX(),t.getY())));
                         } else {
                             detecterNbMovementPion(t, new LinkedList<>(), null);
                         }
@@ -931,6 +951,7 @@ public class Damier implements Cloneable {
         return null;
     }
 
+
     /** Méthode permettant de détecter tout les mouvement qu'une dame peut faire.
      *
      * @param tuile sur la qu'elle la dame sera évalué
@@ -938,7 +959,7 @@ public class Damier implements Cloneable {
      * @param damier sur lequel la dame est évaluer
      * @param direction précédant de la dame */
 
-    public void detecterNbDeplacementDame(Tuile tuile, LinkedList<Tuile> mouvementFait, Damier damier, Direction direction) throws CloneNotSupportedException {
+    public void detecterNbDeplacementDame(Tuile tuile, LinkedList<Tuile> mouvementFait, Damier damier, Direction direction, Pion.Couleur couleur) throws CloneNotSupportedException {
         Damier damierTmp = damier.clone();
         Tuile tuileTmp = damierTmp.getTuile(tuile.getX(), tuile.getY());
         Tuile tuileOriginale = tuileTmp;
@@ -950,56 +971,109 @@ public class Damier implements Cloneable {
         if (mouvementFait.size() == 3) {
             System.out.println(1);
         }
-
+        // BAS GAUCHE
         while (true) {
             try {
                 LinkedList<Tuile> listTmp = new LinkedList<>();
                 listTmp.addAll(mouvementFait);
                 if (damierTmp.estVideTuile(tuileTmp.getTuileBasGauche())) {
-                    if (listTmp.size() > 1) {
-                        listTmp.removeLast();
+                    if (listTmp.size() > 1 ) {
+                        if (direction == Direction.BAS_GAUCHE) {
+                            listTmp.removeLast();
+                            listTmp.add(tuileTmp.getTuileBasGauche());
+                            listeMove.add(listTmp);
+                        }
+                    } else {
+                        listTmp.add(tuileTmp.getTuileBasGauche());
+                        listeMove.add(listTmp);
                     }
-                    listTmp.add(tuileTmp.getTuileBasGauche());
-                    listeMove.add(listTmp);
-                } else if (getCouleurPionSurTuile(tuileTmp.getTuileBasGauche()) != getCouleurPionSurTuile(tuile)) {
+
+                } else if (damierTmp.getCouleurPionSurTuile(tuileTmp.getTuileBasGauche()) != couleur) {
                     if (damierTmp.estVideTuile(tuileTmp.getTuileBasGauche().getTuileBasGauche())) {
                         damierTmp.supprimerPion(tuileTmp.getTuileBasGauche());
                         damierTmp.deplacerPion(tuileOriginale, tuileTmp.getTuileBasGauche().getTuileBasGauche());
                         listTmp.add(tuileTmp.getTuileBasGauche().getTuileBasGauche());
                         listeMove.add(listTmp);
-                        detecterNbDeplacementDame(tuileTmp.getTuileBasGauche().getTuileBasGauche(), listTmp, damierTmp, Direction.BAS_GAUCHE);
+                        detecterNbDeplacementDame(tuileTmp.getTuileBasGauche().getTuileBasGauche(), listTmp, damierTmp, Direction.BAS_GAUCHE, couleur);
                     } else {
                         break;
                     }
                 }else {
                     break;
                 }
+                tuileTmp = tuileTmp.getTuileBasGauche();
             } catch (NullPointerException e) {
                 break;
             }
         }
         damierTmp = damier.clone();
         tuileTmp = damierTmp.getTuile(tuile.getX(), tuile.getY());
-        /* HautGauche */
+        // BAS DROITE
+        while (true) {
+            try {
+                LinkedList<Tuile> listTmp = new LinkedList<>();
+                listTmp.addAll(mouvementFait);
+                if (damierTmp.estVideTuile(tuileTmp.getTuileBasDroite())) {
+                    if (listTmp.size() > 1 ) {
+                        if (direction == Direction.BAS_DROITE) {
+                            listTmp.removeLast();
+                            listTmp.add(tuileTmp.getTuileBasDroite());
+                            listeMove.add(listTmp);
+                        }
+                    } else {
+                        listTmp.add(tuileTmp.getTuileBasDroite());
+                        listeMove.add(listTmp);
+                    }
+
+                } else if (damierTmp.getCouleurPionSurTuile(tuileTmp.getTuileBasDroite()) != couleur) {
+                    if (damierTmp.estVideTuile(tuileTmp.getTuileBasDroite().getTuileBasDroite())) {
+                        damierTmp.supprimerPion(tuileTmp.getTuileBasDroite());
+                        damierTmp.deplacerPion(tuileOriginale, tuileTmp.getTuileBasDroite().getTuileBasDroite());
+                        listTmp.add(tuileTmp.getTuileBasDroite().getTuileBasDroite());
+                        listeMove.add(listTmp);
+                        detecterNbDeplacementDame(tuileTmp.getTuileBasDroite().getTuileBasDroite(), listTmp, damierTmp, Direction.BAS_DROITE, couleur);
+                    } else {
+                        break;
+                    }
+                }else {
+                    break;
+                }
+                tuileTmp = tuileTmp.getTuileBasDroite();
+            } catch (NullPointerException e) {
+                break;
+            }
+        }
+        damierTmp = damier.clone();
+        tuileTmp = damierTmp.getTuile(tuile.getX(), tuile.getY());
+
+        /* HAUT GAUCHE*/
         while (true) {
             try {
                 LinkedList<Tuile> listTmp = new LinkedList<>();
                 listTmp.addAll(mouvementFait);
                 if (damierTmp.estVideTuile(tuileTmp.getTuileHautGauche())) {
-                    if (direction == Direction.HAUT_GAUCHE || direction == null) {
-                        if (listTmp.size() > 1) {
+                    if (listTmp.size() > 1 ) {
+                        if (direction == Direction.HAUT_GAUCHE) {
                             listTmp.removeLast();
+                            listTmp.add(tuileTmp.getTuileHautGauche());
+                            listeMove.add(listTmp);
                         }
+                    } else {
                         listTmp.add(tuileTmp.getTuileHautGauche());
                         listeMove.add(listTmp);
                     }
-                } else if (damierTmp.estVideTuile(tuileTmp.getTuileHautGauche().getTuileHautGauche()) && damierTmp.getCouleurPionSurTuile(tuileTmp.getTuileHautGauche()) != damierTmp.getCouleurPionSurTuile(tuile) ) {
-                    damierTmp.supprimerPion(tuileTmp.getTuileHautGauche());
-                    damierTmp.deplacerPion(tuileOriginale, tuileTmp.getTuileHautGauche().getTuileHautGauche());
-                    listTmp.add(tuileTmp.getTuileHautGauche().getTuileHautGauche());
-                    listeMove.add(listTmp);
-                    detecterNbDeplacementDame(tuileTmp.getTuileHautGauche().getTuileHautGauche(), listTmp, damierTmp, Direction.HAUT_GAUCHE);
-                } else {
+
+                } else if (damierTmp.getCouleurPionSurTuile(tuileTmp.getTuileHautGauche()) != couleur) {
+                    if (damierTmp.estVideTuile(tuileTmp.getTuileHautGauche().getTuileHautGauche())) {
+                        damierTmp.supprimerPion(tuileTmp.getTuileHautGauche());
+                        damierTmp.deplacerPion(tuileOriginale, tuileTmp.getTuileHautGauche().getTuileHautGauche());
+                        listTmp.add(tuileTmp.getTuileHautGauche().getTuileHautGauche());
+                        listeMove.add(listTmp);
+                        detecterNbDeplacementDame(tuileTmp.getTuileHautGauche().getTuileHautGauche(), listTmp, damierTmp, Direction.HAUT_GAUCHE, couleur);
+                    } else {
+                        break;
+                    }
+                }else {
                     break;
                 }
                 tuileTmp = tuileTmp.getTuileHautGauche();
@@ -1009,68 +1083,40 @@ public class Damier implements Cloneable {
         }
         damierTmp = damier.clone();
         tuileTmp = damierTmp.getTuile(tuile.getX(), tuile.getY());
-        /* HautDroite*/
+        /* HAUT DROITE*/
         while (true) {
             try {
-                LinkedList<Tuile> listTmp = new LinkedList<Tuile>();
+                LinkedList<Tuile> listTmp = new LinkedList<>();
                 listTmp.addAll(mouvementFait);
                 if (damierTmp.estVideTuile(tuileTmp.getTuileHautDroite())) {
-                    if (direction == Direction.HAUT_DROITE || direction == null) {
-                        if (listTmp.size() > 1) {
+                    if (listTmp.size() > 1 ) {
+                        if (direction == Direction.HAUT_DROITE) {
                             listTmp.removeLast();
+                            listTmp.add(tuileTmp.getTuileHautDroite());
+                            listeMove.add(listTmp);
                         }
+                    } else {
                         listTmp.add(tuileTmp.getTuileHautDroite());
                         listeMove.add(listTmp);
                     }
-                } else if (damierTmp.estVideTuile(tuileTmp.getTuileHautDroite().getTuileHautDroite()) && damierTmp.getCouleurPionSurTuile(tuileTmp.getTuileHautDroite()) != damierTmp.getCouleurPionSurTuile(tuile) ) {
-                    damierTmp.supprimerPion(tuileTmp.getTuileHautDroite());
-                    damierTmp.deplacerPion(tuileOriginale, tuileTmp.getTuileHautDroite().getTuileHautDroite());
-                    listTmp.add(tuileTmp.getTuileHautDroite().getTuileHautDroite());
-                    listeMove.add(listTmp);
-                    detecterNbDeplacementDame(tuileTmp.getTuileHautDroite().getTuileHautDroite(), listTmp, damierTmp, Direction.HAUT_DROITE);
-                } else {
+
+                } else if (damierTmp.getCouleurPionSurTuile(tuileTmp.getTuileHautDroite()) != couleur) {
+                    if (damierTmp.estVideTuile(tuileTmp.getTuileHautDroite().getTuileHautDroite())) {
+                        damierTmp.supprimerPion(tuileTmp.getTuileHautDroite());
+                        damierTmp.deplacerPion(tuileOriginale, tuileTmp.getTuileHautDroite().getTuileHautDroite());
+                        listTmp.add(tuileTmp.getTuileHautDroite().getTuileHautDroite());
+                        listeMove.add(listTmp);
+                        detecterNbDeplacementDame(tuileTmp.getTuileHautDroite().getTuileHautDroite(), listTmp, damierTmp, Direction.HAUT_DROITE, couleur);
+                    } else {
+                        break;
+                    }
+                }else {
                     break;
                 }
                 tuileTmp = tuileTmp.getTuileHautDroite();
-
             } catch (NullPointerException e) {
                 break;
             }
-        }
-        damierTmp = damier.clone();
-        tuileTmp = damierTmp.getTuile(tuile.getX(), tuile.getY());
-
-
-        /* BasDroit*/
-        while (true) {
-            try {
-                LinkedList<Tuile> listTmp = new LinkedList<>(mouvementFait);
-                if (damierTmp.estVideTuile(tuileTmp.getTuileBasDroite())) {
-                    if (direction == Direction.BAS_DROITE || direction == null) {
-                        if (listTmp.size() > 1) {
-                            listTmp.removeLast();
-                        }
-                        listTmp.add(tuileTmp.getTuileBasDroite());
-                        listeMove.add(listTmp);
-                    }
-                } else if (damierTmp.getCouleurPionSurTuile(damier.getTuile(tuileTmp.getTuileBasDroite().getX(), tuileTmp.getTuileBasDroite().getY())) == damier.getCouleurPionSurTuile(tuile)) {
-                    break;
-                } else if (damierTmp.estVideTuile(tuileTmp.getTuileBasDroite().getTuileBasDroite()) && damierTmp.getCouleurPionSurTuile(tuileTmp.getTuileBasDroite()) != damierTmp.getCouleurPionSurTuile(tuile) ) {
-                    damierTmp.supprimerPion(tuileTmp.getTuileBasDroite());
-                    damierTmp.deplacerPion(tuileOriginale, tuileTmp.getTuileBasDroite().getTuileBasDroite());
-                    listTmp.add(tuileTmp.getTuileBasDroite().getTuileBasDroite());
-                    listeMove.add(listTmp);
-                    detecterNbDeplacementDame(tuileTmp.getTuileBasDroite().getTuileBasDroite(), listTmp, damierTmp, Direction.BAS_DROITE);
-                } else {
-                    break;
-                }
-                tuileTmp = tuileTmp.getTuileBasDroite();
-            } catch (NullPointerException e) {
-                break;
-            }
-        }
-        if (mouvementFait.size() == 5) {
-            System.out.println(1);
         }
     }
 
