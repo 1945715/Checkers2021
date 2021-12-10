@@ -951,6 +951,28 @@ public class Damier implements Cloneable {
             System.out.println(1);
         }
 
+        while (true) {
+            try {
+                LinkedList<Tuile> listTmp = new LinkedList<>();
+                listTmp.addAll(mouvementFait);
+                if (damierTmp.estVideTuile(tuileTmp.getTuileBasGauche())) {
+                    if (listTmp.size() > 1) {
+                        listTmp.removeLast();
+                    }
+                    listTmp.add(tuileTmp.getTuileBasGauche());
+                    listeMove.add(listTmp);
+                }
+                else if (getCouleurPionSurTuile(tuileTmp.getTuileBasGauche()) != getCouleurPionSurTuile(tuile)) {
+                    if (damierTmp.estVideTuile(tuileTmp.getTuileBasGauche().getTuileBasGauche())) {
+
+                    }
+                }else {
+                    break;
+                }
+            } catch (NullPointerException e) {
+                break;
+            }
+        }
         /* HautGauche */
         while (true) {
             try {
