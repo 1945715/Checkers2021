@@ -1,68 +1,79 @@
 package cstjean.mobile.checkers2021.code;
 
+import androidx.annotation.NonNull;
+
 /**
- * Cette classe créer les pions
+ * Cette classe créer les pions.
  *
  * @author Sebastien Fortier
  * @author Yoan Gauthier
  * @author Hakim-Anis Hamani
  */
-public class Pion implements Cloneable{
-
+public class Pion implements Cloneable {
     /**
-     * Enum des couleurs possibles pour le pion
+     * Enum des couleurs possibles pour le pion.
      */
     public enum Couleur {
+
+        /**
+         * Couleur noir.
+         */
         NOIR,
+        /**
+         * Couleur blanche.
+         */
         BLANC
     }
 
     /**
-     * Couleur du pion
+     * Couleur du pion.
      */
-    private final Couleur m_couleur;
+    private final Couleur couleur;
 
     /**
-     * Constructeur du pion
+     * Constructeur du pion.
      *
-     * @param p_couleur Couleur du pion
+     * @param couleur Couleur du pion.
      */
-    public Pion(Couleur p_couleur) {
-        m_couleur = p_couleur;
+    public Pion(Couleur couleur) {
+        this.couleur = couleur;
     }
 
     /**
-     * Obtient la couleur du pion
+     * Obtient la couleur du pion.
      *
-     * @return la couleur du pion
+     * @return la couleur du pion.
      */
     public Couleur getCouleur() {
-        return m_couleur;
+        return couleur;
     }
 
     /**
-     * Retourne vrai si la couleur du pion est noir
+     * Retourne vrai si la couleur du pion est noir.
      *
-     * @return true si la couleur du pion est noir
-     * false si elle est blanche
+     * @return true si la couleur du pion est noir false si elle est blanche
      */
     public boolean estNoir() {
         return this.getCouleur().equals(Couleur.NOIR);
     }
 
     /**
-     * Retourne vrai si la couleur du pion est blanc
+     * Retourne vrai si la couleur du pion est blanc.
      *
-     * @return true si la couleur du pion est blanche
-     * false si elle est noir
+     * @return true si la couleur du pion est blanche false si elle est noir
      */
     public boolean estBlanc() {
         return this.getCouleur().equals(Couleur.BLANC);
     }
 
-    public Pion clone() throws CloneNotSupportedException
-    {
+    /**
+     * Méthode permettant le clonage d'un pion.
+     *
+     * @return clone du pion
+     * @throws CloneNotSupportedException clone n'est pas supporté.
+     */
+    @NonNull
+    public Pion clone() throws CloneNotSupportedException {
         return (Pion) super.clone();
     }
-
 }

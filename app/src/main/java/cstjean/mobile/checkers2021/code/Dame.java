@@ -1,7 +1,7 @@
 package cstjean.mobile.checkers2021.code;
 
 /**
- * Cette classe créer les Dames
+ * Cette classe créer les Dames.
  *
  * @author Sebastien Fortier
  * @author Yoan Gauthier
@@ -9,14 +9,13 @@ package cstjean.mobile.checkers2021.code;
  */
 public class Dame extends Pion {
 
-
     /**
-     * Constructeur du pion de type Dame
+     * Constructeur du pion de type Dame.
      *
-     * @param p_couleur Couleur du pion
+     * @param couleur Couleur du pion
      */
-    public Dame(Couleur p_couleur) {
-        super(p_couleur);
+    public Dame(Couleur couleur) {
+        super(couleur);
     }
 }
 

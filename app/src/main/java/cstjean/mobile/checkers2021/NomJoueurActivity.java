@@ -3,7 +3,7 @@ package cstjean.mobile.checkers2021;
 import androidx.fragment.app.Fragment;
 
 /**
- * Activity pour le menu des noms des joueurs
+ * Activity pour le menu des noms des joueurs.
  *
  * @author Sébastien Fortier
  * @author Yoan Gauthier
@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 public class NomJoueurActivity extends SingleFragmentActivity {
 
     /**
-     * Création d'un fragment de NomJoueur
+     * Création d'un fragment de NomJoueur.
      *
      * @return Un fragment pour le nomJoueur
      */

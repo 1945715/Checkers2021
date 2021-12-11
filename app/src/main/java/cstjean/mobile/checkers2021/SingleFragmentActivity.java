@@ -1,7 +1,6 @@
 package cstjean.mobile.checkers2021;
 
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -15,7 +14,9 @@ import androidx.fragment.app.FragmentManager;
 public abstract class SingleFragmentActivity extends AppCompatActivity {
 
     /**
-     * @return Un fragment pour associer à notre Activity
+     * Fragment.
+     *
+     * @return Fragment.
      */
     protected abstract Fragment createFragment();
 

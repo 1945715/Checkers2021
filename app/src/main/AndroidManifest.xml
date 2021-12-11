@@ -8,8 +8,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Checkers2021">
-        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:theme="@style/Theme.Checkers2021"
+        android:fullBackupContent="@xml/backup_descriptor">
         <activity android:name=".JeuActivity" />
         <activity android:name=".NomJoueurActivity"
             android:exported="true">
